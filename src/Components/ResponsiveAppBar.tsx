@@ -110,7 +110,7 @@ function ResponsiveAppBar() {
                             <Button
                                 key={page}
                                 onClick={handleCloseNavMenu}
-                                sx={{my: 3, color: 'white', display: 'block'}}
+                                sx={{mr: 5, my: 2, color: 'white', display: 'block'}}
                             >
                                 {page}
                             </Button>
@@ -121,7 +121,9 @@ function ResponsiveAppBar() {
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
                                 {!isLoggedIn && (
-                                    <Button variant="contained" color="inherit" onClick={handleLogin}>
+                                    <Button
+                                        sx={{padding: 2, color: 'white', display: 'block'}}
+                                        onClick={handleLogin}>
                                         LOGIN
                                     </Button>
                                 )}

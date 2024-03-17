@@ -67,9 +67,8 @@ function ResponsiveAppBar() {
                     </IconButton>
                     {/* Referring to the Homepage / index.html */}
                     <a href="/">
-                        <Box component="img" src={logo} alt="Logo" sx={{width: 100, height: 60}}/>
+                        <Box component="img" src={logo} alt="Logo" sx={{width: 100, height: 60, mr: 4}}/>
                     </a>
-
                     <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
                         <IconButton
                             size="large"

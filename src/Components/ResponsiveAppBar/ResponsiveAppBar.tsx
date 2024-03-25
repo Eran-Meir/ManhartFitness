@@ -11,18 +11,55 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import logo from '../static/images/manhart-logo.png';
+import logo from '../../static/images/manhart-logo.png';
 import {useEffect, useState} from "react";
+import ResponsiveSideBar from "../ResponsiveSideBar/ResponsiveSideBar";
+import {Link} from "@mui/material";
+import {
+    Construction,
+    EmojiEvents,
+    EmojiPeople,
+    Gavel,
+    LocationOn,
+    Quiz,
+    SupportAgent,
+    YouTube
+} from "@mui/icons-material";
 
-const pages = ['Videos', 'Services', 'Stories', 'Location', 'Tools', 'About Me', 'Disclaimer', 'FAQ'];
+
+const userPages = ['Videos', 'Services', 'Stories', 'Location', 'Tools', 'About Me', 'Disclaimer', 'FAQ'];
 const settings = ['My Profile', 'My Workouts', 'Logout'];
 const userName = 'Eran Meir';
+
+type ButtonInfo = {
+    text: string;
+    icon: React.ComponentType;
+};
+const buttonDictionary: Record<string, ButtonInfo> = {
+    Videos: {text: 'Videos', icon: YouTube},
+    Services: {text: 'Services', icon: SupportAgent},
+    Stories: {text: 'Stories', icon: EmojiEvents},
+    Location: {text: 'Location', icon: LocationOn},
+    Tools: {text: 'Tools', icon: Construction},
+    'About Me': {text: 'About Me', icon: EmojiPeople},
+    Disclaimer: {text: 'Disclaimer', icon: Gavel},
+    FAQ: {text: 'FAQ', icon: Quiz},
+};
+
+function getButtonDetails(buttonText: string): ButtonInfo | undefined {
+    return buttonDictionary[buttonText];
+}
 
 function ResponsiveAppBar() {
     // State to track login status
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+    const [isOpen, setIsOpen] = useState(false);
+
+    const toggleResponsiveSideBar = () => {
+        setIsOpen(!isOpen);
+    };
 
     // Check for existing login on component mount (optional)
     useEffect(() => {
@@ -40,7 +77,9 @@ function ResponsiveAppBar() {
         setAnchorElNav(event.currentTarget);
     };
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElUser(event.currentTarget);
+        if (isLoggedIn) {
+            setAnchorElUser(event.currentTarget);
+        }
     };
 
     const handleCloseNavMenu = () => {
@@ -53,73 +92,53 @@ function ResponsiveAppBar() {
 
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" sx={{borderRadius: '20px'}}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{mr: 6}}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
-                    {/* Referring to the Homepage / index.html */}
                     <a href="/">
-                        <Box component="img" src={logo} alt="Logo" sx={{width: 100, height: 60, mr: 4}}/>
+                        <Box component="img" src={logo} alt="Logo"
+                             sx={{width: 100, height: 60, mr: 4, display: {md: 'flex'}}}/>
                     </a>
-                    <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleOpenNavMenu}
-                            color="inherit"
-                        >
-                            <MenuIcon/>
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorElNav}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
-                            sx={{
-                                display: {xs: 'block', md: 'none'},
-                            }}
-                        >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
-                    <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                sx={{mr: 5, my: 2, color: 'white', display: 'block'}}
-                            >
-                                {page}
-                            </Button>
-                        ))}
-                    </Box>
+                    {/* Referring to the Homepage / index.html */}
 
+                    <Button variant="contained" color="primary" href="/your-other-page"
+                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
+                        <YouTube/>
+                        Videos
+                    </Button>
+                    <Button variant="contained" color="primary" href="/your-other-page"
+                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
+                        <SupportAgent/>
+                        Services
+                    </Button>
+                    <Button variant="contained" color="primary" href="/your-other-page"
+                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
+                        <EmojiEvents/>
+                        Stories
+                    </Button>
+                    <Button variant="contained" color="primary" href="/your-other-page"
+                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
+                        <LocationOn/>
+                        Location
+                    </Button>
+                    <Button variant="contained" color="primary" href="/your-other-page"
+                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
+                        <Construction/>
+                        Tools
+                    </Button>
+                    <Button variant="contained" color="primary" href="/your-other-page"
+                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
+                        <EmojiPeople/>
+                        About Me
+                    </Button>
+                    <Button variant="contained" color="primary" href="/your-other-page"
+                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
+                        <Gavel/>
+                        Disclaimer
+                    </Button>
                     <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
+                            <IconButton onClick={handleOpenUserMenu} sx={{p: 0, ml: 6}}>
                                 {!isLoggedIn && (
                                     <Button
                                         sx={{padding: 2, color: 'white', display: 'block'}}
@@ -156,7 +175,6 @@ function ResponsiveAppBar() {
                 </Toolbar>
             </Container>
         </AppBar>
-
     );
 }
 

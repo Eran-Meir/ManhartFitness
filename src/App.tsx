@@ -1,13 +1,15 @@
 import React from 'react';
 import './App.css';
-import Header from "./Components/ResponsiveAppBar";
+import ResponsiveAppBar from "./Components/ResponsiveAppBar/ResponsiveAppBar";
+import {ThemeProvider} from '@mui/material/styles';
+
 
 function App() {
-  return (
-    <>
-      <Header />
-    </>
-  );
+    return (
+        <>
+            <ResponsiveAppBar/>
+        </>
+    );
 }
 
 export default App;

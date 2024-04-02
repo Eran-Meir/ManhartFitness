@@ -5,16 +5,14 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from '../../static/images/manhart-logo.png';
+import {Theme, useMediaQuery} from '@mui/material';
 import {useEffect, useState} from "react";
-import ResponsiveSideBar from "../ResponsiveSideBar/ResponsiveSideBar";
-import {Link} from "@mui/material";
 import {
     Construction,
     EmojiEvents,
@@ -26,11 +24,10 @@ import {
     YouTube
 } from "@mui/icons-material";
 
-
-const userPages = ['Videos', 'Services', 'Stories', 'Location', 'Tools', 'About Me', 'Disclaimer', 'FAQ'];
+const MIN_WINDOW_SIZE:number = 1200
 const settings = ['My Profile', 'My Workouts', 'Logout'];
 const userName = 'Eran Meir';
-
+const buttons = ['Videos', 'Services', 'Stories', 'Location', 'Tools', 'About', 'Disclaimer', 'FAQ'];
 type ButtonInfo = {
     text: string;
     icon: React.ComponentType;
@@ -41,10 +38,11 @@ const buttonDictionary: Record<string, ButtonInfo> = {
     Stories: {text: 'Stories', icon: EmojiEvents},
     Location: {text: 'Location', icon: LocationOn},
     Tools: {text: 'Tools', icon: Construction},
-    'About Me': {text: 'About Me', icon: EmojiPeople},
+    'About': {text: 'About', icon: EmojiPeople},
     Disclaimer: {text: 'Disclaimer', icon: Gavel},
     FAQ: {text: 'FAQ', icon: Quiz},
 };
+
 
 function getButtonDetails(buttonText: string): ButtonInfo | undefined {
     return buttonDictionary[buttonText];
@@ -56,7 +54,49 @@ function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
     const [isOpen, setIsOpen] = useState(false);
+    const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= MIN_WINDOW_SIZE);
 
+    useEffect(() => {
+        const handleResize = () => setIsLargeScreen(window.innerWidth >= MIN_WINDOW_SIZE);
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+    const renderedButtons = buttons.map((buttonText) => {
+        const buttonData = buttonDictionary[buttonText];
+        if (buttonData) {
+            const {text, icon: IconComponent} = buttonData;
+            return (
+                <Button
+                    key={text}
+                    color="primary"
+                    href={'/' + text}
+                    aria-label={text}
+                    title={text}
+                    sx={{
+                        padding: 2,
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        '& .MuiSvgIcon-root': {
+                            marginRight: 1, // Adjust icon margin if needed
+                        },
+                        '& .text': {
+                            display: isLargeScreen ? 'block' : 'none', // Use template literal for dynamic check
+                        },
+                    }}
+                >
+                    <IconComponent/> {/* Always render the icon */}
+                    <span className="text">{text}</span> {/* Render text conditionally based on screen size */}
+                </Button>
+            );
+        } else {
+            // Handle case where button text is not found in the dictionary (optional)
+            console.error(`Button text "${buttonText}" not found`);
+            return null; // To avoid rendering empty elements
+        }
+    });
     const toggleResponsiveSideBar = () => {
         setIsOpen(!isOpen);
     };
@@ -90,52 +130,15 @@ function ResponsiveAppBar() {
         setAnchorElUser(null);
     };
 
-
     return (
         <AppBar position="static" sx={{borderRadius: '20px'}}>
             <Container maxWidth="xl">
-                <Toolbar disableGutters>
+                <Toolbar disableGutters sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <a href="/">
-                        <Box component="img" src={logo} alt="Logo"
-                             sx={{width: 100, height: 60, mr: 4, display: {md: 'flex'}}}/>
+                        <Box component="img" src={logo} alt="Logo" sx={{width: 100, height: 60, mr: 4}}/>
                     </a>
                     {/* Referring to the Homepage / index.html */}
-
-                    <Button variant="contained" color="primary" href="/your-other-page"
-                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
-                        <YouTube/>
-                        Videos
-                    </Button>
-                    <Button variant="contained" color="primary" href="/your-other-page"
-                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
-                        <SupportAgent/>
-                        Services
-                    </Button>
-                    <Button variant="contained" color="primary" href="/your-other-page"
-                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
-                        <EmojiEvents/>
-                        Stories
-                    </Button>
-                    <Button variant="contained" color="primary" href="/your-other-page"
-                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
-                        <LocationOn/>
-                        Location
-                    </Button>
-                    <Button variant="contained" color="primary" href="/your-other-page"
-                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
-                        <Construction/>
-                        Tools
-                    </Button>
-                    <Button variant="contained" color="primary" href="/your-other-page"
-                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
-                        <EmojiPeople/>
-                        About Me
-                    </Button>
-                    <Button variant="contained" color="primary" href="/your-other-page"
-                            sx={{mr: 2, display: {xs: 'none', md: 'flex'}, wrap: 'noWrap', color: 'white'}}>
-                        <Gavel/>
-                        Disclaimer
-                    </Button>
+                    {renderedButtons}
                     <Box sx={{flexGrow: 0}}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0, ml: 6}}>
